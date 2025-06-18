@@ -1,12 +1,16 @@
+from dataclasses import dataclass
 from enum import Enum
 
-class Type(Enum):
+class IdNoType(Enum):
     VIAF = "VIAF"
     ISNI = "ISNI"
     WIKIDATA = "Wikidata"
+    EP_WOMAN = "Epistolae woman_id"
+    EP_PEOPLE = "Epistolae people_id"
+    EP_LETTER = "Epistolae letter_id"
 
+@dataclass(frozen=True)
 class IdNo:
-    def __init__(self, type : Type, uri : str, code : str):
-        self.type = type
-        self.uri = uri
-        self.code = code
+    type : IdNoType
+    uri : str
+    code : str
