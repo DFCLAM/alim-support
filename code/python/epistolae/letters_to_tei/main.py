@@ -30,13 +30,13 @@ if not output_base_path.is_dir():
 for path in chain(epistolae_women_path.iterdir(), epistolae_people_path.iterdir()):
     person = read_person(path)
     if person:
-        match person.type:
-            case PersonType.WOMAN:
+        match person['type']:
+            case "woman":
                 output_dir = output_base_path.joinpath('women')
-            case PersonType.PERSON:
+            case "person":
                 output_dir = output_base_path.joinpath('people')
-        output_dir = output_dir.joinpath(str(person.id))
-        if not output_dir.exists:
+        output_dir = output_dir.joinpath(str(person['id']))
+        if not output_dir.exists():
             populate_idnos(person)
             time.sleep(1) # to avoid HTTP 429 Too Many Requests from wikidata
             output_dir.mkdir()

@@ -36,28 +36,35 @@ def get_unique_result(title: str, woman: bool):
     return None
 
 def read_person(path : pathlib.Path):
-    type : PersonType = None
+    type : str = None
     id : int = None
     front_matter = parse_hugo_front_matter(path)
     if 'woman_id' in front_matter:
-        type = PersonType.WOMAN
+        type = "woman"
         id = front_matter['woman_id']
     elif 'people_id' in front_matter:
-        type = PersonType.PERSON
+        type = "person"
         id = front_matter['people_id']
     else:
         return None
     true_id = int(path.name[:path.name.find('.')])
     if (true_id != id):
         id = true_id
-    return Person(type, id, front_matter['title'], path, "https://epistolae.unisi.it" + front_matter['url'], dict())
+    return {
+        'type' :type, 
+        'id' : id, 
+        'title' : front_matter['title'], 
+        'path' : str(path.absolute()), 
+        'url' : "https://epistolae.unisi.it" + front_matter['url'],
+        'proposed_idnos' : dict()
+        }
 
-def populate_idnos(person : Person):
-    wikidata_binding = get_unique_result(person.title, person.type == PersonType.WOMAN)
+def populate_idnos(person : dict):
+    wikidata_binding = get_unique_result(person['title'], person['type'] == "woman")
     if wikidata_binding:
-        person.proposed_idnos[IdNoType.WIKIDATA] = IdNo(IdNoType.WIKIDATA, wikidata_binding['item']['value'], None)
+        person['proposed_idnos']['Wikidata'] = wikidata_binding['item']['value']
         if 'viaf' in wikidata_binding:
-            person.proposed_idnos[IdNoType.VIAF] = IdNo(IdNoType.VIAF, None, wikidata_binding['viaf']['value'])
+            person['proposed_idnos']['VIAF'] = wikidata_binding['viaf']['value']
         if 'isni' in wikidata_binding:
-            person.proposed_idnos[IdNoType.VIAF] = IdNo(IdNoType.ISNI, None, wikidata_binding['isni']['value'])      
+            person['proposed_idnos']['ISNI'] = wikidata_binding['isni']['value']      
 
