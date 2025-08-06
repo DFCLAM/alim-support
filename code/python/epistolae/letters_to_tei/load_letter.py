@@ -57,6 +57,6 @@ def populate_text(letter : dict):
         # The original text ends at the next <h2> section or at the end of the body
         match_to = re.compile(r'<h2').search(text)
         if match_to:
-            letter["text"] = text[:match_to.span()[0]]
-        else:
-            letter["text"] = text
+            text = text[:match_to.span()[0]]
+        
+        letter["text"] = text.strip()

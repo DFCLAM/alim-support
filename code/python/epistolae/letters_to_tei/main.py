@@ -45,9 +45,9 @@ for path in chain(epistolae_women_path.iterdir(), epistolae_people_path.iterdir(
             with output_file.open('w') as output_fp:
                 json.dump(person, output_fp)
 
-possibile_che_non_esista_un_regexp_literal_come_in_perl_o_in_javascript = re.compile("[0-9]+\\.html\\.md")
+file_filter = re.compile(r'[0-9]+\.html\.md')
 for path in epistolae_letters_path.iterdir():
-    if (possibile_che_non_esista_un_regexp_literal_come_in_perl_o_in_javascript.match(path.name)):
+    if (file_filter.match(path.name)):
         # print (path)
         letter = read_letter(path)
         print (letter)
