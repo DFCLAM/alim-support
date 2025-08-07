@@ -1,6 +1,6 @@
 import pathlib
 from epistolae.letters_to_tei.load_women_and_people import read_person, populate_idnos
-from epistolae.letters_to_tei.load_letter import read_letter, populate_text
+from epistolae.letters_to_tei.load_letter import read_letter_body, read_letter_front_matter
 from itertools import chain
 import json
 import time
@@ -43,13 +43,19 @@ for path in chain(epistolae_women_path.iterdir(), epistolae_people_path.iterdir(
             output_dir.mkdir()
             output_file = output_dir.joinpath('metadata.json')
             with output_file.open('w') as output_fp:
-                json.dump(person, output_fp)
+                json.dump(person, output_fp, indent = 4)
 
+output_dir = output_base_path.joinpath('letters')
 file_filter = re.compile(r'[0-9]+\.html\.md')
 for path in epistolae_letters_path.iterdir():
     if (file_filter.match(path.name)):
         # print (path)
-        letter = read_letter(path)
-        print (letter)
-        populate_text(letter)
-        print (letter)
+        letter = read_letter_front_matter(path)
+        read_letter_body(letter)
+        # print (letter)
+        letter_dir = output_dir.joinpath(str(letter['id']))
+        letter_dir.mkdir(exist_ok = True)
+        output_file = letter_dir.joinpath('letter.json')
+        with output_file.open('w') as output_fp:
+            json.dump(letter, output_fp, indent = 4)
+        

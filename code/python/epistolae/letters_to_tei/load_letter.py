@@ -1,10 +1,13 @@
-import pathlib
-from epistolae.utils.hugo_utils import parse_hugo_front_matter, get_hugo_body
+from pathlib import Path
+from epistolae.utils.hugo_utils import parse_hugo_front_matter, read_hugo_body
 import wikidata.wikidata_utils as wd
 import re
+from enum import Enum
+from io import StringIO
+from html.parser import HTMLParser
 from xml.etree import ElementTree
 
-def read_letter(path : pathlib.Path):
+def read_letter_front_matter(path : Path):
     """Read the woman/person metadata from the front matter
     
     Returns
@@ -17,7 +20,7 @@ def read_letter(path : pathlib.Path):
     `url` (original url from the epistolae's website),
     `senders_ids` (list),
     `receivers_ids` (list),
-    `text` (the original text of the letter)
+    `printed_source` (the original printed_source of the letter)
     """
 
     front_matter : dict = parse_hugo_front_matter(path)
@@ -39,24 +42,84 @@ def read_letter(path : pathlib.Path):
         'receivers_ids' : receivers_ids
         }
 
-def populate_text(letter : dict):
+class BodyParser(HTMLParser):
+    """Parse the body extracting relevant information, 
+    transforming or removing HTML to achieve TEI compliance.
+    
+    References
+    ----------
+    https://docs.python.org/3/library/html.parser.html#html.parser.HTMLParser
+    https://stackoverflow.com/a/925630
+    """
+
+    class FSA(Enum):
+        NONE = 1
+        H2_START = 2
+        H2_END = 3
+        ORIGINAL_LETTER_WORKING = 4
+        PRINTED_SOURCE_WORKING = 5
+
+    def __init__(self, letter : dict):
+        super().__init__()
+        self.reset()
+        self.letter = letter
+        self.strict = False
+        self.convert_charrefs= True
+        self.original_letter = StringIO()
+        self.printed_source = StringIO()
+        self.fsa = self.FSA.NONE
+
+    def handle_starttag(self, tag, attrs):
+        # print("Encountered a start tag:", tag)
+        fsa = self.fsa
+        match (tag, fsa):
+            case ("h2", _):
+                self.fsa = self.FSA.H2_START
+            case ("p", self.FSA.ORIGINAL_LETTER_WORKING):
+                # maintains the <p> tag because it is supported by TEI
+                self.original_letter.write("<p>")
+            case ("br", self.FSA.ORIGINAL_LETTER_WORKING):
+                # convert <br/> to TEI's <lb/>
+                self.original_letter.write("<lb/>")
+
+    def handle_endtag(self, tag):
+        # print("Encountered an end tag :", tag)
+        fsa = self.fsa
+        match (tag, fsa):
+            case ("p", self.FSA.ORIGINAL_LETTER_WORKING):
+                # maintains the <p> tag because it is supported by TEI
+                self.original_letter.write("</p>")
+
+    def handle_data(self, data):
+        # print("Encountered some data  :", data)
+        fsa = self.fsa
+        match (fsa, data):
+            case (self.FSA.H2_START, _) if "original letter" in data.lower():
+                self.fsa = self.FSA.ORIGINAL_LETTER_WORKING
+            case (self.FSA.H2_START, _) if "printed source" in data.lower():
+                self.fsa = self.FSA.PRINTED_SOURCE_WORKING
+            case (self.FSA.ORIGINAL_LETTER_WORKING, _):
+                self.original_letter.write(data)
+            case (self.FSA.PRINTED_SOURCE_WORKING, _):
+                self.printed_source.write(data)
+
+    def close(self):
+        super().close()
+        self.letter["original_letter"] = self.original_letter.getvalue()
+        self.letter["printed_source"] = self.printed_source.getvalue()
+
+def read_letter_body(letter : dict):
     """Search the original text of the letter
     and, if found, put it in the `text` property 
     of the letter.
 
     Paramteres
     ----------
-        a dict in the format returned by read_letter()
+        a dict in the format returned by read_letter_front_matter()
     """
 
-    text = get_hugo_body(pathlib.Path(letter["path"]))
-    match_from = re.compile(r'<h2[^>]*>\s*Original letter[^<]*</h2>').search(text)
-    if match_from:
-        text = text[match_from.span()[1]:]
-        
-        # The original text ends at the next <h2> section or at the end of the body
-        match_to = re.compile(r'<h2').search(text)
-        if match_to:
-            text = text[:match_to.span()[0]]
-        
-        letter["text"] = text.strip()
+    body_parser = BodyParser(letter)
+    with Path(letter["path"]).open('r') as file:
+        for line in read_hugo_body(file):
+            body_parser.feed(line)
+    body_parser.close()

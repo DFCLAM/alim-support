@@ -1,7 +1,8 @@
-import pathlib
+from pathlib import Path
+from io import TextIOWrapper
 import yaml
 
-def read_hugo_front_matter(path: pathlib.Path):
+def read_hugo_front_matter(file : TextIOWrapper):
     """Generator function that extract the Hugo's front matter line by line
 
     The generator iterates over all the lines included
@@ -13,14 +14,14 @@ def read_hugo_front_matter(path: pathlib.Path):
     path : pathlib.Path
         the path of the hugo file containing a front matter
     """
-    for line in path:
+    for line in file:
         if line.startswith('---'):
-            for line in path:
+            for line in file:
                 if line.startswith('---'):
                     return
                 yield line
 
-def read_hugo_body(path: pathlib.Path):
+def read_hugo_body(file : TextIOWrapper):
     """Generator function that extract the Hugo's body line by line
 
     The generator iterates over all the lines included
@@ -32,15 +33,15 @@ def read_hugo_body(path: pathlib.Path):
     path : pathlib.Path
         the path of the hugo file containing a front matter
     """
-    for line in path:
+    for line in file:
         if line.startswith('---'):
-            for line in path:
+            for line in file:
                 if line.startswith('---'):
                     break
-            for line in path:
+            for line in file:
                 yield line
 
-def parse_hugo_front_matter(path: pathlib.Path):
+def parse_hugo_front_matter(path: Path):
     """Parse the YML front matter of the hugo files
     
     Returns
@@ -50,7 +51,7 @@ def parse_hugo_front_matter(path: pathlib.Path):
     with path.open('r') as file:
         return yaml.load(''.join(read_hugo_front_matter(file)), Loader=yaml.Loader)
     
-def get_hugo_body(path: pathlib.Path):
+def get_hugo_body(path: Path):
     """Return the body of the hugo files
     
     Returns
