@@ -6,6 +6,7 @@ from enum import Enum
 from io import StringIO
 from html.parser import HTMLParser
 from xml.etree import ElementTree
+from datetime import date
 
 def read_letter_front_matter(path : Path):
     """Read the woman/person metadata from the front matter
@@ -36,6 +37,8 @@ def read_letter_front_matter(path : Path):
     return {
         'id' : id, 
         'title' : front_matter['title'], 
+        'created' : front_matter.get('created'), 
+        'modified' : front_matter.get('modified'), 
         'path' : str(path.absolute()), 
         'url' : "https://epistolae.unisi.it" + front_matter['url'],
         'senders_ids' : senders_ids,
@@ -58,15 +61,17 @@ class BodyParser(HTMLParser):
         H2_END = 3
         ORIGINAL_LETTER_WORKING = 4
         PRINTED_SOURCE_WORKING = 5
+        DATE_WORKING = 6
 
     def __init__(self, letter : dict):
         super().__init__()
         self.reset()
         self.letter = letter
         self.strict = False
-        self.convert_charrefs= True
+        self.convert_charrefs = True
         self.original_letter = StringIO()
         self.printed_source = StringIO()
+        self.date = ''
         self.fsa = self.FSA.NONE
 
     def handle_starttag(self, tag, attrs):
@@ -98,15 +103,32 @@ class BodyParser(HTMLParser):
                 self.fsa = self.FSA.ORIGINAL_LETTER_WORKING
             case (self.FSA.H2_START, _) if "printed source" in data.lower():
                 self.fsa = self.FSA.PRINTED_SOURCE_WORKING
+            case (self.FSA.H2_START, _) if "date" in data.lower():
+                self.fsa = self.FSA.DATE_WORKING
             case (self.FSA.ORIGINAL_LETTER_WORKING, _):
                 self.original_letter.write(data)
             case (self.FSA.PRINTED_SOURCE_WORKING, _):
                 self.printed_source.write(data)
+            case (self.FSA.DATE_WORKING, _):
+                self.date = data
 
     def close(self):
         super().close()
         self.letter["original_letter"] = self.original_letter.getvalue()
         self.letter["printed_source"] = self.printed_source.getvalue()
+        self.letter["date"] = self.date
+
+class DateParser:
+    """A class representing the best effort result of the parsing of the date
+    declared in a letter.
+    """
+
+    def __init__(self, original_value : str, value : date):
+        self.original_value : str = original_value
+        self.value : str = value
+
+    def is_successfully_parsed() -> bool:
+        return self.value is not None
 
 def read_letter_body(letter : dict):
     """Search the original text of the letter

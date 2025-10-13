@@ -5,6 +5,7 @@ from itertools import chain
 import json
 import time
 import re
+import csv
 
 # initialize common local paths for data input and output results
 
@@ -59,3 +60,36 @@ for path in epistolae_letters_path.iterdir():
         with output_file.open('w') as output_fp:
             json.dump(letter, output_fp, indent = 4)
         
+results = []
+for path in chain(output_base_path.joinpath('women').iterdir(), output_base_path.joinpath('people').iterdir()):
+    with path.joinpath('metadata.json').open('r') as json_fp:
+        json_obj = json.load(json_fp)
+        if 'proposed_idnos' in json_obj:
+            if 'Wikidata' in json_obj['proposed_idnos']:
+                csv_row = {'URL' : json_obj['url'], 'Wikidata' : json_obj['proposed_idnos']['Wikidata']}
+                if 'VIAF' in json_obj['proposed_idnos']:
+                    csv_row['VIAF'] = json_obj['proposed_idnos']['VIAF']
+                if 'ISNI' in json_obj['proposed_idnos']:
+                    csv_row['ISNI'] = json_obj['proposed_idnos']['ISNI']
+                results.append(csv_row)
+                # print(json_obj['proposed_idnos']['Wikidata'])
+
+with output_base_path.joinpath('idnos.csv').open('w', newline='') as csv_fp:
+    writer = csv.DictWriter(csv_fp, fieldnames=['URL','Wikidata','VIAF','ISNI'])
+    writer.writeheader()
+    writer.writerows(results)
+
+original_dates = set()
+date_formats = dict()
+for path in output_base_path.joinpath('letters').iterdir():
+    with path.joinpath('letter.json').open('r') as json_fp:
+        json_obj = json.load(json_fp)
+        if 'date' in json_obj:
+            original_dates.add(json_obj['date'])
+for original_date in original_dates:
+    original_date = str(original_date).strip().lower()
+    original_date = re.sub('[0-9]', 'x', original_date)
+    original_date = re.sub('january|february|march|april|may|june|july|august|september|october|november|december', 'MONTH', original_date)
+    date_formats[original_date] = date_formats.get(original_date, 0) + 1
+for date_format in sorted(date_formats, key = date_formats.get, reverse = True):
+    print(date_formats[date_format], ' : ', date_format)
