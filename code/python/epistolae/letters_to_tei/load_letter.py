@@ -94,6 +94,8 @@ class BodyParser(HTMLParser):
             case ("p", self.FSA.ORIGINAL_LETTER_WORKING):
                 # maintains the <p> tag because it is supported by TEI
                 self.original_letter.write("</p>")
+            case ("h2", self.FSA.H2_START):
+                self.fsa = self.FSA.H2_END
 
     def handle_data(self, data):
         # print("Encountered some data  :", data)
@@ -122,6 +124,21 @@ class DateParser:
     """A class representing the best effort result of the parsing of the date
     declared in a letter.
     """
+
+    MONTHS_MAP = {
+        "january" : "01", 
+        "february" : "02", 
+        "march" : "03", 
+        "april" : "04", 
+        "may" : "05", 
+        "june" : "06",
+        "july" : "07",  
+        "august" : "08", 
+        "september" : "09", 
+        "october" : "10", 
+        "november" : "11", 
+        "december" : "12"
+        }
 
     def __init__(self, original_value : str, value : date):
         self.original_value : str = original_value
