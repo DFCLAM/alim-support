@@ -40,6 +40,7 @@ class DateParser:
         of date format which can be unambiguously translated 
         to a date or a date interval.
         If parsed successfully, the result is put into when_iso.
+        See /resources/python/epistolae/letters_to_tei/date_formats.txt
         """
         original_value_normalized = self.original_value.strip().lower()
         # 246 : xxxx, MONTH xx | 107 : xxxx, MONTH x | 11 : xxxx, MONTH xx. | 6 : xxx, MONTH xx | 3 : xxxx, MONTH x.
