@@ -1,0 +1,135 @@
+246 : xxxx, MONTH xx
+182 : xxxx
+130 : xxxx, MONTH
+107 : xxxx, MONTH x
+104 : xx/xx/xxxx
+55 : xxxx-xx
+43 : c.xxxx
+29 : xxx
+29 : xxx, MONTH
+22 : xxx-xx
+20 : xxxx?
+16 : xxxx-xxxx
+15 : xx/xxxx
+15 : xxx-xxx
+11 : xxxx/xxxx, MONTH
+11 : after xxxx
+11 : xxxx, MONTH xx.
+11 : x/xx/xxxx
+10 : x/x/xxxx
+10 : before xxxx
+8 : c.xxx
+8 : MONTH xxxx
+8 : xxxx/xxxx
+7 : xxx's
+7 : MONTH x, xxxx
+6 : MONTH xx, xxxx
+6 : xxx, MONTH xx
+6 : MONTH, xxxx
+5 : xxxx-xx?
+5 : c.xxxx?
+5 : MONTH xxx
+5 : xxxx/xxxx, MONTH x
+5 : xxx?
+4 : c.xxxx-xx
+4 : x/ or x/xxxx
+4 : xxxx/xx
+3 : after xxx
+3 : before xxx
+3 : c.xxxx, MONTH
+3 : xxxx, xx MONTH
+3 : xxxx/xxxx, MONTH xx
+3 : xxxx, MONTH x.
+3 : xxxx, before MONTH xx
+3 : xxxx, MONTH?
+2 : 
+2 : xxx, MONTH x
+2 : xxxx-xxxx, MONTH xx
+2 : xxxx or xxxx
+2 : xxxx-xx, MONTH
+2 : xxxx, MONTH to xxxx, MONTH
+2 : after xxx?
+2 : xx/x/xxxx
+2 : x/xxx-x/xxx
+2 : xxxx-xx, probably after xxxx
+2 : by xxxx
+2 : xxxx's
+2 : xxx-xxx?
+2 : mid xth century
+2 : xxxx-xx, MONTH xx
+2 : ?xxxx
+2 : xxx/xxx
+2 : xxxx-xx, MONTH.
+2 : xxxx MONTH
+2 : mid twelfth century
+1 : xxx-x
+1 : mid xxth century
+1 : late xxth-early xxth century
+1 : xxxx, after MONTH xx
+1 : c.xxxx, MONTH xx
+1 : xxx MONTH to xxx, MONTH
+1 : bet. xxxx-xxxx?
+1 : ?xxxx, MONTH xx
+1 : autumn xxxx
+1 : xxxx, MONTH xx or xxxx
+1 : xxxx autumn to xxxx
+1 : xxx, MONTH, to xxx, MONTH
+1 : xxxx, MONTH x-x
+1 : xxx, MONTH to MONTH
+1 : xxx MONTH
+1 : xxxx/xxxx MONTH xx
+1 : xxx, MONTH/MONTH
+1 : xxxx, MONTH/MONTH
+1 : xxxx, spring
+1 : xxxx (?)
+1 : late xxth to early xxth?
+1 : xx/xxx
+1 : xxxx, MONTH xx (xxxx, MONTH x)
+1 : xxxx, before MONTH x
+1 : between MONTH x, xxx and MONTH xxx
+1 : late xxth century?
+1 : xxxx-xx, MONTH x
+1 : xxth century
+1 : before x/x/xxxx
+1 : late xth century
+1 : xxxx, MONTH xx or MONTH xx (xxxx, MONTH x)
+1 : xxx, nov.xx
+1 : spring xxx
+1 : x MONTH, xxxx
+1 : MONTH xxxx-xxxx
+1 : xxxx,MONTH xx(xxxx, MONTH x)
+1 : xxxx, MONTH (x)
+1 : after MONTH x, xxx
+1 : late xxxx
+1 : xxx-xx?
+1 : end of xxx
+1 : x/x/xxxx n.st.
+1 : xxxx/xx, MONTH x
+1 : early xxxx
+1 : xxxx/xx, MONTH
+1 : xxxx, before MONTH
+1 : xxxx-x?
+1 : ?
+1 : early xxx's
+1 : xxxx, MONTH-MONTH
+1 : summer xxxx
+1 : xx/-xx/xxx
+1 : x/xx/xxxx n.st.
+1 : xxxx-xx/xxxx-xxxx
+1 : c.xxx-xxx
+1 : late xxth to early xxth
+1 : xxx, oct.
+1 : xxxx, after xx/xx
+1 : x/x/xxx
+1 : late xth or early xth century?
+1 : xxxx, MONTH x (or xxxx)
+1 : xxx?-xx
+1 : xxxx, summer/early autumn
+1 : xxxx, feb.x
+1 : end of xxx or xxx
+1 : xxxx, after easter, MONTH xx
+1 : xxxx, mary xx-xx
+1 : xxx or later
+1 : MONTH xx, xxx
+1 : early xxx
+1 : xxxx, mid MONTH

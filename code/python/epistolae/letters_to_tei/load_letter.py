@@ -8,6 +8,70 @@ from html.parser import HTMLParser
 from xml.etree import ElementTree
 from datetime import date
 
+class DateParser:
+    """A class representing the best effort result of the parsing of the date
+    declared in a letter.
+    """
+
+    MONTHS_MAP = {
+        "january" : "01", 
+        "february" : "02", 
+        "march" : "03", 
+        "april" : "04", 
+        "may" : "05", 
+        "june" : "06",
+        "july" : "07",  
+        "august" : "08", 
+        "september" : "09", 
+        "october" : "10", 
+        "november" : "11", 
+        "december" : "12"
+        }
+    
+    MONTHS_REGEX_FRAGMENT = "|".join(MONTHS_MAP.keys())
+
+    def __init__(self, original_value : str):
+        self.original_value : str = original_value
+        self.when_iso : str = None
+
+    def parse(self):
+        """Try to parse the original_value to a valid when_iso.
+        This method is able to parse only the most frequent types
+        of date format which can be unambiguously translated 
+        to a date or a date interval.
+        If parsed successfully, the result is put into when_iso.
+        """
+        original_value_normalized = self.original_value.strip().lower()
+        # 246 : xxxx, MONTH xx | 107 : xxxx, MONTH x | 11 : xxxx, MONTH xx. | 6 : xxx, MONTH xx | 3 : xxxx, MONTH x.
+        if match := re.fullmatch(r"(\d\d\d\d?),\s+({})\s+(\d\d?)\.?".format(DateParser.MONTHS_REGEX_FRAGMENT), original_value_normalized):
+            self.when_iso = "{:04d}-{}-{:02d}".format(int(match.group(1)), DateParser.MONTHS_MAP[match.group(2)], int(match.group(3)))
+        # 182 : xxxx | 29 : xxx
+        elif match := re.fullmatch(r"(\d\d\d\d?)", original_value_normalized):
+            self.when_iso = "{:04d}".format(int(original_value_normalized))
+        # 130 : xxxx, MONTH | 29 : xxx, MONTH
+        elif match := re.fullmatch(r"(\d\d\d\d?),\s+({})".format(DateParser.MONTHS_REGEX_FRAGMENT), original_value_normalized):
+            self.when_iso = "{:04d}-{{}}".format(int(match.group(1)), DateParser.MONTHS_MAP[match.group(2)])
+        # 104 : xx/xx/xxxx | 11 : x/xx/xxxx | 10 : x/x/xxxx | 2 : xx/x/xxxx
+        elif match := re.fullmatch(r"(\d\d?)/(\d\d?)/(\d\d\d\d)", original_value_normalized):
+            self.when_iso = "{}-{:02d}-{:02d}".format(match.group(3), int(match.group(1)), int(match.group(2)))
+        # 15 : xx/xxxx
+        elif match := re.fullmatch(r"(\d\d)/(\d\d\d\d)", original_value_normalized):
+            self.when_iso = "{}-{}".format(match.group(2), match.group(1))
+        # 8 : MONTH xxxx | 6 : MONTH, xxxx | 5 : MONTH xxx
+        elif match := re.fullmatch(r"({}),?\s+(\d\d\d\d?)".format(DateParser.MONTHS_REGEX_FRAGMENT), original_value_normalized):
+            self.when_iso = "{:04d}-{{}}".format(int(match.group(2)), DateParser.MONTHS_MAP[match.group(1)])
+        # 7 : MONTH x, xxxx | 6 : MONTH xx, xxxx | 1 : MONTH xx, xxx
+        elif match := re.fullmatch(r"\s+({})\s+(\d\d?),\s+(\d\d\d\d?)".format(DateParser.MONTHS_REGEX_FRAGMENT), original_value_normalized):
+            self.when_iso = "{:04d}-{}-{:02d}".format(int(match.group(3)), DateParser.MONTHS_MAP[match.group(1)], int(match.group(2)))
+        # 4 : xxxx/xx
+        elif match := re.fullmatch(r"(\d\d\d\d)/(\d\d)", original_value_normalized):
+            # higher and lower in the historical sense, not in the math. one
+            year_higher = int(match.group(1))
+            year_lower = int(match.group(2)) + (year_higher // 100 * 100)
+            if (year_lower - 1) == year_higher:
+                self.when_iso = "{:04d}/{:04d}".format(year_higher, year_lower) # https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
+        pass
+
 def read_letter_front_matter(path : Path):
     """Read the woman/person metadata from the front matter
     
@@ -33,6 +97,15 @@ def read_letter_front_matter(path : Path):
     
     senders_ids = [sender["id"] for sender in front_matter.get("senders") or []]
     receivers_ids = [sender["id"] for sender in front_matter.get("receivers") or []]
+    date = None
+    if "ltr_date" in front_matter:
+        dateParser = DateParser(front_matter["ltr_date"])
+        dateParser.parse()
+        date = {
+            "original_value" : dateParser.original_value,
+            "when_iso" : dateParser.when_iso
+        }
+
     
     return {
         'id' : id, 
@@ -118,34 +191,13 @@ class BodyParser(HTMLParser):
         super().close()
         self.letter["original_letter"] = self.original_letter.getvalue()
         self.letter["printed_source"] = self.printed_source.getvalue()
-        self.letter["date"] = self.date
-
-class DateParser:
-    """A class representing the best effort result of the parsing of the date
-    declared in a letter.
-    """
-
-    MONTHS_MAP = {
-        "january" : "01", 
-        "february" : "02", 
-        "march" : "03", 
-        "april" : "04", 
-        "may" : "05", 
-        "june" : "06",
-        "july" : "07",  
-        "august" : "08", 
-        "september" : "09", 
-        "october" : "10", 
-        "november" : "11", 
-        "december" : "12"
-        }
-
-    def __init__(self, original_value : str, value : date):
-        self.original_value : str = original_value
-        self.value : str = value
-
-    def is_successfully_parsed() -> bool:
-        return self.value is not None
+        if self.date and not self.letter.get("date"):
+            dateParser = DateParser(self.date)
+            dateParser.parse()
+            self.letter["date"] = {
+                "original_value" : dateParser.original_value,
+                "when_iso" : dateParser.when_iso
+            }
 
 def read_letter_body(letter : dict):
     """Search the original text of the letter
