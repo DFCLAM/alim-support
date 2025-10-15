@@ -54,6 +54,8 @@ for path in epistolae_letters_path.iterdir():
         letter = read_letter_front_matter(path)
         read_letter_body(letter)
         # print (letter)
+        # if not letter.get("original_letter"):
+        #     print(letter.get("url"))
         letter_dir = output_dir.joinpath(str(letter['id']))
         letter_dir.mkdir(exist_ok = True)
         output_file = letter_dir.joinpath('letter.json')
