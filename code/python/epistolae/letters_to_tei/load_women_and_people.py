@@ -52,6 +52,8 @@ def read_person(path : pathlib.Path):
     `type` ("woman"|"person"), 
     `id`, 
     `title`, 
+    `birthdate`, 
+    `deathdate`, 
     `path` (of the original file), 
     `url` (original url from the epistolae's website),
     `proposed_idnos` (empty dict)
@@ -76,6 +78,8 @@ def read_person(path : pathlib.Path):
         'title' : front_matter['title'], 
         'path' : str(path.absolute()), 
         'url' : "https://epistolae.unisi.it" + front_matter['url'],
+        'birthdate' : front_matter.get('birthdate'),
+        'deathdate' : front_matter.get('deathdate'),
         'proposed_idnos' : dict()
         }
 
