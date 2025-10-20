@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <teiHeader>
+
+    <fileDesc>
+
+      <titleStmt>
+
+        <!-- TODO Rivedere il titolo -->
+        <title>{{front.title}}</title>
+
+        {{#front.senders}}
+        <author>
+          <persName>
+            <name>{{name}}</name>
+            <idno type="uri">{{url}}</idno>
+            {{#idno.Wikidata}}
+            <idno type="Wikidata">{{.}}</idno>
+            {{/idno.Wikidata}}
+            {{#idno.VIAF}}
+            <idno type="VIAF">{{.}}</idno>
+            {{/idno.VIAF}}
+          </persName>
+        </author>
+        {{/front.senders}}
+
+        <respStmt>
+          <resp key="print_editor">Edizione critica a stampa a cura di</resp>
+          <!-- TODO Difficile recuperare l'autore da Epistolae: si riporta in nota la sezione "Printed source" -->
+          <note>{{body.printed_source}}</note>
+        </respStmt>
+        <respStmt>
+          <resp key="ALIM2_1">Edizione in formato TEI XML a cura di</resp>
+          <!-- TODO Riportare qui il revisore del documento TEI prodotto dallo script -->
+          <name key="GV">GIUSEPPE VERDI</name>
+        </respStmt>
+
+      </titleStmt>
+
+      <extent>
+        <measure quantity="{{elab.words}}" unit="words">Parole: {{elab.words}}</measure>
+        <measure quantity="{{elab.characters_without_spaces}}" unit="characters_without_spaces">Caratteri (spazi esclusi): {{elab.characters_without_spaces}}</measure>
+      </extent>
+
+      <publicationStmt>
+        <!-- Modificare soltanto la data inserendo la data in cui è stata completata la codifica del testo -->
+        <publisher>
+          <ref target="http://alim.unisi.it/">ALIM</ref>
+        </publisher>
+        <!-- Aggiornare eventualmente con la data di revisione manuale -->
+        <date when-iso="{{elab.date.iso}}">{{elab.date.fmt_ita}}</date>
+        <availability>
+          <p>Copyright 2025 - Progetto ALIM</p>
+        </availability>
+      </publicationStmt>
+
+      <sourceDesc>
+
+        <biblFull>
+          <fileDesc>
+            <titleStmt>
+              <title>{{front.title}}</title>
+            </titleStmt>
+            <publicationStmt>
+              <publisher>
+                <ref target="https://epistolae.unisi.it">Epistolæ: Medieval Women's Letters</ref>
+              </publisher>
+              <date when-iso="{{front.created.iso}}" type="creation">{{front.created.fmt_ita}}</date>
+              <date when-iso="{{front.modified.iso}}" type="last_modification">{{front.modified.fmt_ita}}</date>
+              <availability>
+                <!-- TODO questa è la licenza originale di Epistolae, quindi della versione digitalizzata ma non della TEI -->
+                <licence target="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <p>CC BY-NC-SA 4.0</p>
+                  <p>Copyright {{front.created.year}} Columnbia University</p>
+                </licence>
+              </availability>
+              <idno type="uri">{{front.url}}</idno>
+            </publicationStmt>
+          </fileDesc>
+        </biblFull>
+
+        <!-- TODO vedi e riporta qui respStmt/note per l'edizione a stampa -->
+
+        <!-- Scegliere la versione corretta e sostituire il testo in maiuscolo con i dati appropriati. Cancellare le
+        versioni non utilizzate -->
+
+        <!-- Scheda bibliografica completa per l'edizione critica a stampa di riferimento, versione per edizioni
+          monografiche -->
+        <!-- <biblStruct>
+          <monogr>
+            <author>AUTORE</author>
+            <title>TITOLO</title>
+            <editor>CURATORE</editor>
+            <imprint>
+              <pubPlace>LUOGO DI PUBBLICAZIONE</pubPlace>
+              <publisher>CASA EDITRICE</publisher>
+              <date>DATA</date>
+            </imprint>
+          </monogr>
+          <series>
+            <title level="s">TITOLO EVENTUALE SERIE EDITORIALE</title>
+            <biblScope unit="volume">NUMERO VOLUME</biblScope>
+          </series>
+        </biblStruct> -->
+        <!-- Scheda bibliografica per l'edizione critica di riferimento, versione per edizioni pubblicate su rivista -->
+        <!-- <biblStruct>
+          <analytic>
+            <author>AUTORE</author>
+            <title>TITOLO</title>
+          </analytic>
+          <monogr>
+            <title level="j">TITOLO RIVISTA</title>
+            <imprint>
+              <biblScope unit="vol">NUMERO</biblScope>
+              <date>DATA</date>
+              <biblScope unit="pages">INTERVALLO-PAGINE</biblScope>
+            </imprint>
+          </monogr>
+        </biblStruct> -->
+         <!-- Scheda bibliografica per l'edizione critica di riferimento, versione per edizioni pubblicate come saggio in miscellanea -->
+        <!-- <biblStruct>
+          <analytic>
+            <author>AUTORE</author>
+            <title>TITOLO</title>
+          </analytic>
+          <monogr>
+            <title level="m">TITOLO MISCELLANEA. [ATTI DEL CONVEGNO DI...]</title>
+            <imprint>
+              <pubPlace>LUOGO DI PUBBLICAZIONE DELLA MISCELLANEA</pubPlace>
+              <publisher>CASA EDITRICE DELLA MISCELLANEA</publisher>
+              <date>DATA DI STAMPA DELLA MISCELLANEA</date>
+              <biblScope unit="pages">INTERVALLO-PAGINE</biblScope>
+            </imprint>
+          </monogr>
+        </biblStruct> -->
+        <!-- In aggiunta/alternativa il titolo esteso nel formato originale con indicati solo AUTORE e TITOLO -->
+        <!-- <bibl>TITOLO ESTESO PER OPERE STAMPATE XVI-XVIII secc.</bibl> -->
+
+      </sourceDesc>
+
+    </fileDesc>
+
+    <encodingDesc>
+
+      <!-- Informazioni generali relative al progetto -->
+      <projectDesc>
+        <p>Testo codificato nel formato TEI XML, versione P5, per essere incluso fra i testi che compongono il progetto
+          ALIM - Archivio della Latinità Italiana del Medioevo.</p>
+      </projectDesc>
+    
+      <editorialDecl>
+        <!-- Qui sono inserite note editoriali che valgono per tutti i testi ALIM -->
+        <ab type="boilerplate">La codifica segue le norme standard stabilite dal progetto ALIM, in dettaglio: <list>
+            <item>Sono state eliminate le sillabazioni: la parola spezzata da un 'a capo' è stata unita alla riga
+              precedente (anche alla pagina precedente, ove necessario). Eccezione: quando una parola è sillabata alla
+              fine di una riga e nella successiva riga appare solo la seconda parte della parola sillabata (quindi il
+              resto della riga a stampa è vuoto), la parola è stata registrata tutta nella riga in cui essa termina. È
+              stato ritenuto prioritario, infatti, mantenere il numero complessivo delle righe di ogni pagina.</item>
+          </list>
+        </ab>
+        <!-- Specificare il livello di codifica: ALIM2_0=livello 0, ALIM2_1=livello 1, ALIM2_2=livello 2; ALIM2_3=livello 3 -->
+        <ab type="level">ALIM2_1</ab>
+        <!-- Se ci sono note editoriali che riguardano uno specifico testo queste vanno in un elemento <ab> con @type
+          come specificato qui di seguito; se non è necessario cancellare l'<ab> che segue -->
+        <ab type="specific"> </ab>
+      </editorialDecl>
+
+    </encodingDesc>
+
+    <profileDesc>
+
+      <langUsage>
+        <!-- Aggiungere nota su attributo che permette di attribuire percentuali di lingue in un testo -->
+        <language ident="lat">Latino</language>
+      </langUsage>
+
+      <textClass>
+        <!-- Informazioni di catalogazione:
+         Forma: Prosa/Poesia/Prosimetro
+         Tipo di fonte: LETTERARIA/DOCUMENTARIA
+         Genere: GENERE (Epistolografia, Storiografia etc.) -->
+        <keywords>
+          <term type="form">Prosa</term>
+          <term type="source">Letteraria</term>
+          <term type="genre">Epistolografia</term>
+        </keywords>
+      </textClass>
+
+      <creation>
+        <!-- Data di creazione del testo originario: IX secolo, IX-X secolo, 1380... Vd. https://www.tei-c.org/release/doc/tei-p5-doc/en/html/ref-att.datable.iso.html per possibili valori di @when-iso -->
+        {{#front.date.when_iso}}
+        <date when-iso="{{front.date.when_iso}}">{{front.date.when_iso}}</date>
+        {{/front.date.when_iso}}
+        {{^front.date.when_iso}}
+        <date>{{front.date.original_value}}</date>
+        {{/front.date.when_iso}}
+      </creation>
+
+      <correspDesc>
+        {{#front.senders}}
+        <correspAction type="sent">
+          <persName>
+            <name>{{name}}</name>
+            <idno type="uri">{{url}}</idno>
+            {{#idno.Wikidata}}
+            <idno type="Wikidata">{{.}}</idno>
+            {{/idno.Wikidata}}
+            {{#idno.VIAF}}
+            <idno type="VIAF">{{.}}</idno>
+            {{/idno.VIAF}}
+          </persName>
+        </correspAction>
+        {{/front.senders}}
+        {{#front.receivers}}
+        <correspAction type="received">
+          <persName>
+            <name>{{name}}</name>
+            <idno type="uri">{{url}}</idno>
+            {{#idno.Wikidata}}
+            <idno type="Wikidata">{{.}}</idno>
+            {{/idno.Wikidata}}
+            {{#idno.VIAF}}
+            <idno type="VIAF">{{.}}</idno>
+            {{/idno.VIAF}}
+          </persName>
+        </correspAction>
+        {{/front.receivers}}
+      </correspDesc>
+
+    </profileDesc>
+
+    <revisionDesc>
+
+      <change when-iso="{{elab.date.iso}}">Prima trascrizione automatica nel formato TEI P5 [livello ALIM2_1]</change>
+
+      <!-- Si riportano qui una serie di esempi relativi a <change>, aventi anche, fra parentesi quadre:
+      ALIM2_1=livello 1, ALIM2_2=livello 2; ALIM2_3=livello 3 -->
+      <!-- ATTENZIONE: sono solo esempi, cancellare e/o modificare come appropriato, la modifica più recente in alto -->
+      <!-- <change when="2018-05" who="GV">Prima trascrizione nel formato TEI P5 [livello ALIM2_2]</change> -->
+
+    </revisionDesc>
+
+  </teiHeader>
+
+  <text>
+
+    <body>{{body.original_letter}}</body>
+
+  </text>
+
+</TEI>

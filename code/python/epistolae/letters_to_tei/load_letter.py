@@ -111,12 +111,13 @@ def read_letter_front_matter(path : Path):
     return {
         'id' : id, 
         'title' : front_matter['title'], 
+        'date' : date,
+        'senders_ids' : senders_ids,
+        'receivers_ids' : receivers_ids,
         'created' : front_matter.get('created'), 
         'modified' : front_matter.get('modified'), 
         'path' : str(path.absolute()), 
-        'url' : "https://epistolae.unisi.it" + front_matter['url'],
-        'senders_ids' : senders_ids,
-        'receivers_ids' : receivers_ids
+        'url' : "https://epistolae.unisi.it" + front_matter['url']
         }
 
 class BodyParser(HTMLParser):
