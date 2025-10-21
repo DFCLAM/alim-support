@@ -84,8 +84,8 @@ def read_letter_front_matter(path : Path):
     `date` (normalized where possible), 
     `path` (of the original file), 
     `url` (original url from the epistolae's website),
-    `senders_ids` (list),
-    `receivers_ids` (list),
+    `senders` (list),
+    `receivers` (list),
     `printed_source` (the original printed_source of the letter)
     """
 
@@ -95,9 +95,11 @@ def read_letter_front_matter(path : Path):
     true_id = int(path.name[:path.name.find('.')])
     if (true_id != id):
         id = true_id
-    
-    senders_ids = [sender["id"] for sender in front_matter.get("senders") or []]
-    receivers_ids = [sender["id"] for sender in front_matter.get("receivers") or []]
+
+    sender_to_path = lambda sender : re.sub(r'/(women|people)/(\d+).html', r'\1/\2/metadata.json', str(sender['url']).replace('woman/', 'women/'))
+    senders = [sender_to_path(sender) for sender in front_matter.get("senders") or []]
+    receivers = [sender_to_path(sender) for sender in front_matter.get("receivers") or []]
+
     date = None
     if "ltr_date" in front_matter:
         dateParser = DateParser(front_matter["ltr_date"])
@@ -112,8 +114,8 @@ def read_letter_front_matter(path : Path):
         'id' : id, 
         'title' : front_matter['title'], 
         'date' : date,
-        'senders_ids' : senders_ids,
-        'receivers_ids' : receivers_ids,
+        'senders' : senders,
+        'receivers' : receivers,
         'created' : front_matter.get('created'), 
         'modified' : front_matter.get('modified'), 
         'path' : str(path.absolute()), 

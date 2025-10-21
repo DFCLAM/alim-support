@@ -27,8 +27,7 @@
 
         <respStmt>
           <resp key="print_editor">Edizione critica a stampa a cura di</resp>
-          <!-- TODO Difficile recuperare l'autore da Epistolae: si riporta in nota la sezione "Printed source" -->
-          <note>{{body.printed_source}}</note>
+          <name><!-- Ricavare il nome dell'autore contenuto in teiHeader/fileDesc/sourceDesc/biblFull/fileDesc/sourceDesc/bibl --></name>
         </respStmt>
         <respStmt>
           <resp key="ALIM2_1">Edizione in formato TEI XML a cura di</resp>
@@ -72,14 +71,19 @@
                 <!-- TODO questa è la licenza originale di Epistolae, quindi della versione digitalizzata ma non della TEI -->
                 <licence target="https://creativecommons.org/licenses/by-nc-sa/4.0/">
                   <p>CC BY-NC-SA 4.0</p>
-                  <p>Copyright {{front.created.year}} Columnbia University</p>
+                  <p>Copyright {{front.created.year}} Joan Ferrante and Columbia Center for Teaching and Learning</p>
                 </licence>
               </availability>
               <idno type="uri">{{front.url}}</idno>
             </publicationStmt>
+            <sourceDesc>
+              <!-- TODO Difficile effettuare il parsing della citazione bibliografica, per questo si usa il tag <bibl> che non è strutturato -->
+              <bibl>{{body.printed_source}}</bibl>
+            </sourceDesc>
           </fileDesc>
+          <profileDesc/>
         </biblFull>
-
+        
         <!-- TODO vedi e riporta qui respStmt/note per l'edizione a stampa -->
 
         <!-- Scegliere la versione corretta e sostituire il testo in maiuscolo con i dati appropriati. Cancellare le
