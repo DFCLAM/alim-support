@@ -38,8 +38,8 @@
       </titleStmt>
 
       <extent>
-        <measure quantity="{{elab.words}}" unit="words">Parole: {{elab.words}}</measure>
-        <measure quantity="{{elab.characters_without_spaces}}" unit="characters_without_spaces">Caratteri (spazi esclusi): {{elab.characters_without_spaces}}</measure>
+        <measure quantity="{{elab.measures.words}}" unit="words">Parole: {{elab.measures.words}}</measure>
+        <measure quantity="{{elab.measures.characters_without_spaces}}" unit="characters_without_spaces">Caratteri (spazi esclusi): {{elab.measures.characters_without_spaces}}</measure>
       </extent>
 
       <publicationStmt>
@@ -249,7 +249,11 @@
 
   <text>
 
-    <body>{{body.original_letter}}</body>
+    <body>
+      <div type="letter">
+        {{{body.original_letter}}}
+      </div>
+    </body>
 
   </text>
 

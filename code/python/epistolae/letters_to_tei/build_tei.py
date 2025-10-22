@@ -19,8 +19,46 @@ def build_person(path : str) -> dict:
             'url' : person_json['url'],
             'idno' : person_json['proposed_idnos'],
         }
-        pass
-    pass
+
+measures_re = re.compile(r'[a-z]+', flags = re.IGNORECASE)
+def measures(text : str) -> dict:
+
+    # Strip xml tags out from words and characters count
+    text = re.sub(r'<[^>]+>', ' ', text)
+
+    words = measures_re.findall(text)
+    characters_without_spaces = 0
+    for word in words: characters_without_spaces += len(word)
+    # print(words)
+    # print(len(words))
+    # print(characters_without_spaces)
+    # print(characters_without_spaces / ( len(words) or 1 ))
+    return {
+        'words' : len(words),
+        'characters_without_spaces' : characters_without_spaces
+    }
+
+def normalize(text : str):
+    return re.sub(r'\s+', ' ', (text or '').strip())
+
+def add_newlines(text : str, max_length : int):
+    """Improve readability, avoiding single long lines"""
+
+    last_index = 0
+    def newline(match : re.Match):
+        nonlocal last_index
+        if (match.start() - last_index) >= max_length:
+            last_index = match.end()
+            return '\r\n        '
+        return match.group()
+
+    return re.sub(r'\s+', newline, text)
+
+def add_paragraph_if_needed(text : str):
+    """Add <p> tagg if absent, to produce a legal body content"""
+    if not text.startswith('<p'):
+        return '<p>\r\n        ' + text + '\r\n        </p>'
+    return text
 
 def build_data(letter_path : Path) -> dict:
 
@@ -48,13 +86,14 @@ def build_data(letter_path : Path) -> dict:
             'receivers' : [build_person(path) for path in letter_json.get('receivers') or []],
         },
         'body' : {
-            'original_letter' : letter_json.get('original_letter'),
-            'printed_source' : letter_json.get('printed_source'),
+            'original_letter' : add_paragraph_if_needed(add_newlines(normalize(str(letter_json.get('original_letter'))), 120)),
+            'printed_source' : normalize(str(letter_json.get('printed_source')).strip()),
         },
         'elab' : {
             'date' : {
                 'iso' : todaysdate.isoformat()
-            }
+            },
+            'measures' : measures(letter_json.get('original_letter'))
         }
     }
 
