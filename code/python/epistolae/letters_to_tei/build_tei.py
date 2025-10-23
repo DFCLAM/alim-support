@@ -3,7 +3,7 @@ from epistolae.utils.file_utils import detox
 from pathlib import Path
 import chevron, json, re
 from datetime import date
-from babel.dates import format_date, format_datetime, format_time
+from babel.dates import format_date
 
 tei_template_file = resources_base_path.joinpath('TEI_template_01.xml')
 # print(tei_template_file.absolute)
@@ -91,7 +91,8 @@ def build_data(letter_path : Path) -> dict:
         },
         'elab' : {
             'date' : {
-                'iso' : todaysdate.isoformat()
+                'iso' : todaysdate.isoformat(),
+                'fmt_ita' : todaysdate.strftime(r'%d/%m/%Y')
             },
             'measures' : measures(letter_json.get('original_letter'))
         }

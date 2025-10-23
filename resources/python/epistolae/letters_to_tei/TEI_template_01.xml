@@ -11,18 +11,7 @@
         <title>{{front.title}}</title>
 
         {{#front.senders}}
-        <author>
-          <persName>
-            <name>{{name}}</name>
-            <idno type="uri">{{url}}</idno>
-            {{#idno.Wikidata}}
-            <idno type="Wikidata">{{.}}</idno>
-            {{/idno.Wikidata}}
-            {{#idno.VIAF}}
-            <idno type="VIAF">{{.}}</idno>
-            {{/idno.VIAF}}
-          </persName>
-        </author>
+        <author ref="{{url}}">{{name}}</author>
         {{/front.senders}}
 
         <respStmt>
@@ -250,7 +239,7 @@
   <text>
 
     <body>
-      <div type="letter">
+      <div xml:lang="lat" type="letter">
         {{{body.original_letter}}}
       </div>
     </body>
