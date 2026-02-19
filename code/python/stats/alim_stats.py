@@ -107,17 +107,17 @@ def measure(text : str, xml_obj : ElementTree.Element, consistenza : str, metada
     # Calculate measures from text
     # Simplest way of tokenization using split
     tokens = text.strip().split()
-    calculated_words = len(tokens)
-    calculated_characters_without_spaces = 0
+    computed_words = len(tokens)
+    computed_characters_without_spaces = 0
     for token in tokens:
-        calculated_characters_without_spaces += len(token)
+        computed_characters_without_spaces += len(token)
 
     return {
         'declared_words' : declared_words,
         'declared_characters_without_spaces' : declared_characters_without_spaces,
         'declared_characters_unspecified' : declared_characters_unspecified,
-        'calculated_words' : calculated_words,
-        'calculated_characters_without_spaces' : calculated_characters_without_spaces
+        'computed_words' : computed_words,
+        'computed_characters_without_spaces' : computed_characters_without_spaces
     }
 
 csv_books_path = Path(ALIM_STATS_OUTPUT_BASE_PATH + '/books.csv')
@@ -139,7 +139,7 @@ totals = {
       'chars' : 0      
   }
 }
-fieldnames = ['id','url','title','author','calculated_words','declared_words','calculated_characters_without_spaces','declared_characters_without_spaces','declared_characters_unspecified']
+fieldnames = ['id','url','title','author','computed_words','declared_words','computed_characters_without_spaces','declared_characters_without_spaces','declared_characters_unspecified']
 
 for result in generate_documents():
     # print('\n##########################################################################################')
@@ -150,8 +150,8 @@ for result in generate_documents():
     result['url'] = 'https://alim.unisi.it/dl/resource/' + str(result['id'])
     containers[key].append({k: v for k, v in result.items() if k in fieldnames})
     totals[key]['count'] += 1
-    totals[key]['words'] += result['calculated_words']
-    totals[key]['chars'] += result['calculated_characters_without_spaces']
+    totals[key]['words'] += result['computed_words']
+    totals[key]['chars'] += result['computed_characters_without_spaces']
 
 with csv_books_path.open('w') as csv_books_fp:
     writer = csv.DictWriter(csv_books_fp, fieldnames = fieldnames)
