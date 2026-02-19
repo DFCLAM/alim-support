@@ -1,0 +1,11 @@
+import os
+
+# ALIM DB (copy)
+MARIADB_ALIM_PHP7_HOST = os.getenv('MARIADB_ALIM_PHP7_HOST', '127.0.0.1')
+MARIADB_ALIM_PHP7_PORT = os.getenv('MARIADB_ALIM_PHP7_PORT', '3307')
+MARIADB_ALIM_PHP7_DB = os.getenv('MARIADB_ALIM_PHP7_DB', 'alim_php7')
+MARIADB_ALIM_PHP7_USER = os.getenv('MARIADB_ALIM_PHP7_USER', 'root')
+MARIADB_ALIM_PHP7_PSW = os.getenv('MARIADB_ALIM_PHP7_PSW', None)
+
+
+TEI_STYLESHEETS_BASE_PATH = os.getenv('TEI_STYLESHEETS_BASE_PATH', '/home/giulio/Development/git/TEI-Stylesheets')
