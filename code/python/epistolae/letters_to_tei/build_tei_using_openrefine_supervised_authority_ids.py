@@ -2,14 +2,24 @@ from epistolae.letters_to_tei.env import *
 from epistolae.utils.file_utils import detox
 from pathlib import Path
 import chevron, json, re
+from pyexcel_ods3 import get_data
 from datetime import date
 from babel.dates import format_date
 
-tei_template_file = resources_base_path.joinpath('TEI_template_01.xml')
-# print(tei_template_file.absolute)
+tei_template = None # cache
+def load_tei_template():
+    if not tei_template:
+        tei_template_file = resources_base_path.joinpath('TEI_template_01.xml')
+        # print(tei_template_file.absolute)
+        with tei_template_file.open('r') as fp:
+            tei_template = fp.read()
+    return tei_template
 
-with tei_template_file.open('r') as fp:
-    template = fp.read()
+authority_ids = None
+def load_authority_ids():
+    if not authority_ids:
+        pass
+    return authority_ids
 
 def build_person(path : str) -> dict:
     with output_base_path.joinpath(path).open('r') as fp:
@@ -103,7 +113,7 @@ def create_tei(letter_path : Path, tei_base_path : Path):
     hash = build_data(letter_path)
     
     with tei_base_path.joinpath('Epistola_' + str(hash['front']['id']) + '_' + detox(hash['front']['title']) + '.tei.xml').open('w') as fp:
-        fp.write(chevron.render(template, hash))
+        fp.write(chevron.render(load_tei_template(), hash))
         pass
 
 tei_base_path = output_base_path.joinpath('TEI')
