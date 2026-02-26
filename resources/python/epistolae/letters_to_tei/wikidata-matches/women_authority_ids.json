@@ -233,5 +233,65 @@
         "wikidata_url": "https://www.wikidata.org/wiki/Q468724",
         "Wikidata": "Q468724",
         "VIAF": "81159156"
+    },
+
+    "4": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/4.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q261883",
+        "Wikidata": "Q261883",
+        "VIAF": "10644226"
+    },
+    "116": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/116.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q230073",
+        "Wikidata": "Q230073",
+        "VIAF": "80340934"
+    },
+    "25729": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/25729.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q9652383",
+        "Wikidata": "Q9652383"
+    },
+    "79": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/79.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q229807",
+        "Wikidata": "Q229807",
+        "VIAF": "265117591",
+        "ISNI": "0000000043209200"
+    },
+    "143": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/143.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q238352",
+        "Wikidata": "Q238352"
+    },
+    "25368": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/25368.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q16275096",
+        "Wikidata": "Q16275096"
+    },
+    "3": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/3.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q1186147",
+        "Wikidata": "Q1186147",
+        "VIAF": "4171169757875108010002"
+    },
+    "22": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/22.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q435658",
+        "Wikidata": "Q435658",
+        "VIAF": "61685758",
+        "ISNI": "0000000119504581"
+    },
+    "26192": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/26192.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q447337",
+        "Wikidata": "Q447337"
+    },
+    "29": {
+        "epistolae_url": "https://epistolae.unisi.it/woman/29.html",
+        "wikidata_url": "https://www.wikidata.org/wiki/Q464162",
+        "Wikidata": "Q464162",
+        "VIAF": "37711457",
+        "ISNI": "0000000081171784"
     }
 }
