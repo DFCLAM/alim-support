@@ -2,47 +2,62 @@ from epistolae.letters_to_tei.env import *
 from epistolae.utils.file_utils import detox
 from pathlib import Path
 import chevron, json, re
-from pyexcel_ods3 import get_data
 from datetime import date
 from babel.dates import format_date
 
 tei_template = None # cache
 def load_tei_template():
+    global tei_template
     if not tei_template:
-        tei_template_file = resources_base_path.joinpath('TEI_template_01.xml')
-        # print(tei_template_file.absolute)
-        with tei_template_file.open('r') as fp:
+        with resources_base_path.joinpath('TEI_template_02.xml').open('r') as fp:
             tei_template = fp.read()
     return tei_template
 
-authority_ids = None
-def load_authority_ids():
-    if not authority_ids:
-        pass
-    return authority_ids
+women_authority_ids = None # cache
+def load_woman_authority_ids(epistolae_id):
+    global women_authority_ids
+    if not women_authority_ids:
+        with resources_base_path.joinpath('wikidata-matches').joinpath('women_authority_ids.json').open('r') as fp:
+            women_authority_ids = json.load(fp)
+    if epistolae_id in women_authority_ids:
+        return women_authority_ids[epistolae_id]
+    return None
 
 def build_person(path : str) -> dict:
+
     with output_base_path.joinpath(path).open('r') as fp:
         person_json : dict = json.load(fp)
+        url = person_json['url']
+        idno = {}
+
+        if 'woman' == person_json['type']:
+            woman_authority_ids = load_woman_authority_ids(str(person_json['id']))
+            if woman_authority_ids:
+                if 'wikidata_url' in woman_authority_ids:
+                    url = woman_authority_ids['wikidata_url']
+                    idno['Wikidata'] = woman_authority_ids['Wikidata']
+                if 'ISNI' in woman_authority_ids:
+                    url = 'https://isni.org/isni/' + woman_authority_ids['ISNI'] # deliberately overwrite url
+                    idno['ISNI'] = woman_authority_ids['ISNI']
+                if 'VIAF' in woman_authority_ids:
+                    url = 'http://viaf.org/viaf/' + woman_authority_ids['VIAF'] # deliberately overwrite url
+                    idno['VIAF'] = woman_authority_ids['VIAF']
+
         return {
             'name' : person_json['title'],
-            'url' : person_json['url'],
-            'idno' : person_json['proposed_idnos'],
+            'url' : url,
+            'idno' : idno,
         }
 
-measures_re = re.compile(r'[a-z]+', flags = re.IGNORECASE)
 def measures(text : str) -> dict:
 
     # Strip xml tags out from words and characters count
     text = re.sub(r'<[^>]+>', ' ', text)
 
-    words = measures_re.findall(text)
+    words = text.split()
     characters_without_spaces = 0
     for word in words: characters_without_spaces += len(word)
-    # print(words)
-    # print(len(words))
-    # print(characters_without_spaces)
-    # print(characters_without_spaces / ( len(words) or 1 ))
+
     return {
         'words' : len(words),
         'characters_without_spaces' : characters_without_spaces
@@ -102,7 +117,7 @@ def build_data(letter_path : Path) -> dict:
         'elab' : {
             'date' : {
                 'iso' : todaysdate.isoformat(),
-                'fmt_ita' : todaysdate.strftime(r'%d/%m/%Y')
+                'fmt_ita' : todaysdate.strftime(f'%d/%m/%Y')
             },
             'measures' : measures(letter_json.get('original_letter'))
         }
