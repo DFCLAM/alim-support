@@ -106,7 +106,7 @@ def measure(text : str, xml_obj : ElementTree.Element, consistenza : str, metada
     
     # Calculate measures from text
     # Simplest way of tokenization using split
-    tokens = text.strip().split()
+    tokens = re.split(r'\W+', text)
     computed_words = len(tokens)
     computed_characters_without_spaces = 0
     for token in tokens:

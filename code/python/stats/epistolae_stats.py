@@ -19,7 +19,7 @@ def measure(letter_json : dict):
     # Calculate measures from text
     # Simplest way of tokenization using split
     text = letter_json['original_letter']
-    tokens = text.strip().split()
+    tokens = re.split(r'\W+', text)
     computed_words = len(tokens)
     computed_characters_without_spaces = 0
     for token in tokens:
